@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSansVF.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-medical-blue: #42A5F5;
+  --color-medical-blue-dark: #1E88E5;
+  --color-medical-blue-light: #64B5F6;
+  --color-accent-yellow: #FFB300;
+  --color-accent-orange: #F57C00;
+  --color-navy: #0A1628;
+  --color-navy-light: #132238;
+  --font-display: 'Reenie Beanie', cursive;
+  --font-body: 'Open Sauce Sans', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (hover: hover) {
+  body.custom-cursor,
+  body.custom-cursor a,
+  body.custom-cursor button {
+    cursor: none;
+  }
+}
