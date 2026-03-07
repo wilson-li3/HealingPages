@@ -4,6 +4,7 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const targetTimeRef = useRef(0);
   const currentTimeRef = useRef(0);
   const animatingRef = useRef(false);
@@ -50,6 +51,7 @@ export default function Hero() {
       const scrollable = section.offsetHeight - window.innerHeight;
       const scrolled = Math.min(Math.max(-rect.top / scrollable, 0), 1);
 
+      setScrollProgress(scrolled);
       targetTimeRef.current = scrolled * video.duration;
       startAnimation();
     };
@@ -168,7 +170,7 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 transition-all duration-700 delay-500 ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 transition-all duration-700 delay-500 ${
               isLoaded
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-6'
@@ -177,90 +179,87 @@ export default function Hero() {
             {/* Primary: Donate Books */}
             <a
               href="#donate"
-              className="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-semibold text-white bg-medical-blue rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-8px_rgba(66,165,245,0.5)] active:translate-y-0 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-medical-blue-light/50 w-full sm:w-auto shadow-lg shadow-medical-blue/30"
+              className="inline-flex items-center justify-center w-full sm:w-auto border border-white/30 text-base text-white/90 transition-colors duration-200 hover:bg-white hover:text-navy hover:border-white focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              style={{ padding: '1.25rem 3rem' }}
             >
-              {/* Shine sweep on hover */}
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/25 to-transparent" aria-hidden="true" />
-              {/* Pulse ring on hover */}
-              <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping bg-medical-blue-light/30 pointer-events-none" aria-hidden="true" />
-              <svg
-                className="w-5 h-5 mr-2.5 transition-all duration-300 group-hover:scale-125 group-hover:rotate-[-8deg] group-active:scale-90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
-              <span className="relative transition-transform duration-300 group-hover:tracking-wider">Donate Books</span>
-              {/* Arrow that slides in on hover */}
-              <svg
-                className="w-0 overflow-hidden opacity-0 group-hover:w-5 group-hover:ml-2 group-hover:opacity-100 transition-all duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              Donate Books
             </a>
 
             {/* Secondary: Schedule a Book Pickup */}
             <a
               href="#schedule"
-              className="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-semibold text-navy bg-accent-yellow rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_40px_-8px_rgba(255,179,0,0.5)] active:translate-y-0 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-yellow/50 w-full sm:w-auto shadow-lg shadow-accent-yellow/30"
+              className="inline-flex items-center justify-center w-full sm:w-auto border border-white/30 text-base text-white/90 transition-colors duration-200 hover:bg-white hover:text-navy hover:border-white focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              style={{ padding: '1.25rem 3rem' }}
             >
-              {/* Shine sweep on hover */}
-              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/30 to-transparent" aria-hidden="true" />
-              {/* Pulse ring on hover */}
-              <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping bg-accent-orange/20 pointer-events-none" aria-hidden="true" />
-              <svg
-                className="w-5 h-5 mr-2.5 transition-all duration-300 group-hover:scale-125 group-hover:rotate-12 group-active:scale-90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="relative transition-transform duration-300 group-hover:tracking-wider">Schedule a Book Pickup</span>
-              {/* Arrow that slides in on hover */}
-              <svg
-                className="w-0 overflow-hidden opacity-0 group-hover:w-5 group-hover:ml-2 group-hover:opacity-100 transition-all duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              Schedule a Book Pickup
             </a>
           </div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator — stays visible, dims once scrolling */}
         <div
-          className={`absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 transition-all duration-700 delay-700 ${
-            isLoaded ? 'opacity-60' : 'opacity-0'
+          className={`absolute bottom-8 left-1/2 z-10 flex flex-col items-center gap-3 transition-all duration-700 delay-700 ${
+            isLoaded ? (scrollProgress < 0.05 ? 'opacity-80' : 'opacity-30') : 'opacity-0'
           }`}
+          style={{
+            transform: 'translateX(-50%)',
+            animation: isLoaded && scrollProgress < 0.05 ? 'heroFloat 2s ease-in-out infinite' : 'none',
+          }}
         >
-          <span className="text-white/70 text-xs font-body tracking-widest uppercase">
-            Scroll
+          <span className="text-white/80 text-xs font-body tracking-widest uppercase">
+            Scroll to explore
           </span>
           <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-white/70 animate-bounce" />
           </div>
+          {/* Chevron arrows */}
+          <div className="flex flex-col items-center -mt-1 gap-0">
+            <svg width="16" height="10" viewBox="0 0 16 10" className="text-white/50" style={{ animation: 'heroChevron 1.5s ease-in-out infinite' }}>
+              <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <svg width="16" height="10" viewBox="0 0 16 10" className="text-white/30 -mt-1" style={{ animation: 'heroChevron 1.5s ease-in-out infinite 0.15s' }}>
+              <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
         </div>
+
+        {/* Scroll progress sidebar */}
+        <div
+          className={`absolute right-4 sm:right-6 z-10 flex flex-col items-center gap-2 transition-opacity duration-500 ${
+            scrollProgress > 0 && scrollProgress < 1 ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          style={{ top: '20%', height: '60%' }}
+          aria-hidden="true"
+        >
+          {/* Track */}
+          <div className="relative w-[2px] h-full rounded-full bg-white/10">
+            {/* Fill */}
+            <div
+              className="absolute top-0 left-0 w-full rounded-full"
+              style={{
+                height: `${scrollProgress * 100}%`,
+                background: 'linear-gradient(to bottom, var(--color-accent-yellow), var(--color-accent-orange))',
+              }}
+            />
+            {/* Dot at current position */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-accent-yellow shadow-[0_0_6px_var(--color-accent-yellow)]"
+              style={{ top: `calc(${scrollProgress * 100}% - 4px)` }}
+            />
+          </div>
+        </div>
+
+        {/* Inline keyframes for hero animations */}
+        <style>{`
+          @keyframes heroFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+          }
+          @keyframes heroChevron {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(3px); }
+          }
+        `}</style>
       </div>
     </section>
   );
