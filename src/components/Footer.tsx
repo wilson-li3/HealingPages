@@ -21,18 +21,21 @@ const LINKS = [
 export default function Footer() {
   return (
     <footer className="relative bg-navy border-t border-white/[0.06]">
-      <div className="px-6 md:px-16 lg:px-24">
+      <div className="w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
         {/* Main footer grid */}
-        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr] gap-12 md:gap-16 py-16 md:py-20">
+        <div
+          className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr]"
+          style={{ gap: 'clamp(2.5rem, 5vw, 4rem)', padding: 'clamp(4rem, 8vw, 6rem) 0' }}
+        >
           {/* Brand column */}
           <div>
-            <a href="/" className="font-display text-white text-4xl md:text-5xl leading-none select-none">
+            <a href="/" className="font-display text-white leading-none select-none" style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)' }}>
               Healing Pages
             </a>
-            <p className="mt-5 text-white/40 text-sm leading-relaxed max-w-xs">
+            <p className="text-white/40 text-sm leading-relaxed max-w-xs" style={{ marginTop: '1.25rem' }}>
               Prescribing literacy to children in Pittsburgh's hospitals and schools. Every book opens a door.
             </p>
-            <div className="mt-6 flex items-center gap-1">
+            <div className="flex items-center gap-1" style={{ marginTop: '1.5rem' }}>
               <span className="inline-block w-8 h-[2px] bg-accent-yellow rounded-full" />
               <span className="inline-block w-2 h-[2px] bg-accent-yellow/50 rounded-full" />
             </div>
@@ -41,15 +44,15 @@ export default function Footer() {
           {/* Link columns */}
           {LINKS.map((col) => (
             <div key={col.heading}>
-              <h4 className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/30 mb-5">
+              <h4 className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/30" style={{ marginBottom: '1.25rem' }}>
                 {col.heading}
               </h4>
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col" style={{ gap: '0.875rem' }}>
                 {col.items.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="text-sm text-white/55 transition-colors duration-200 hover:text-white"
+                      className="text-sm text-white/55 transition-colors duration-200 hover:text-white cursor-pointer"
                     >
                       {link.label}
                     </a>
@@ -61,7 +64,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/[0.06] py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between" style={{ padding: '1.5rem 0', gap: '1rem' }}>
           <p className="text-white/25 text-xs">
             &copy; {new Date().getFullYear()} Healing Pages. Pittsburgh, PA.
           </p>

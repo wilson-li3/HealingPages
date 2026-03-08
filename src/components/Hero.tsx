@@ -75,6 +75,22 @@ export default function Hero() {
   const contentOpacity = Math.max(1 - scrollProgress * 3, 0);
   const contentTranslateY = scrollProgress * -60;
 
+  // Scroll story phrases — each appears in a window of scrollProgress
+  const STORY_PHRASES = [
+    { text: 'Every child deserves a book.', start: 0.25, end: 0.45 },
+    { text: 'Every book opens a door.', start: 0.45, end: 0.65 },
+    { text: 'Every door leads somewhere new.', start: 0.65, end: 0.85 },
+  ];
+
+  const getPhaseOpacity = (start: number, end: number) => {
+    const fadeIn = 0.06;
+    const fadeOut = 0.06;
+    if (scrollProgress < start || scrollProgress > end) return 0;
+    if (scrollProgress < start + fadeIn) return (scrollProgress - start) / fadeIn;
+    if (scrollProgress > end - fadeOut) return (end - scrollProgress) / fadeOut;
+    return 1;
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -237,18 +253,42 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Scroll indicator — simplified, just the mouse icon */}
+        {/* Scroll story phrases — appear as main content fades out */}
+        {STORY_PHRASES.map((phrase) => {
+          const opacity = getPhaseOpacity(phrase.start, phrase.end);
+          const translateY = (1 - opacity) * 20;
+          return (
+            <div
+              key={phrase.text}
+              className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+              style={{ opacity, transform: `translateY(${translateY}px)` }}
+              aria-hidden="true"
+            >
+              <p
+                className="font-display text-white text-center px-6"
+                style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 1 }}
+              >
+                {phrase.text}
+              </p>
+            </div>
+          );
+        })}
+
+        {/* Scroll indicator */}
         <div
-          className={`absolute bottom-8 left-1/2 z-10 flex flex-col items-center gap-2 transition-all duration-700 delay-700 ${
-            isLoaded ? (scrollProgress < 0.05 ? 'opacity-60' : 'opacity-0') : 'opacity-0'
+          className={`absolute bottom-10 left-1/2 z-10 flex flex-col items-center gap-3 transition-all duration-700 delay-700 ${
+            isLoaded ? (scrollProgress < 0.08 ? 'opacity-70' : 'opacity-0') : 'opacity-0'
           }`}
           style={{
             transform: 'translateX(-50%)',
-            animation: isLoaded && scrollProgress < 0.05 ? 'heroFloat 2.5s ease-in-out infinite' : 'none',
+            animation: isLoaded && scrollProgress < 0.08 ? 'heroFloat 2.5s ease-in-out infinite' : 'none',
           }}
         >
-          <div className="w-5 h-8 rounded-full border-2 border-white/25 flex items-start justify-center p-1">
-            <div className="w-1 h-1 rounded-full bg-white/60 animate-bounce" />
+          <span className="text-white/60 text-[11px] font-body tracking-[0.2em] uppercase">
+            Scroll to explore
+          </span>
+          <div className="w-6 h-10 rounded-full border-2 border-white/25 flex items-start justify-center p-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/60 animate-bounce" />
           </div>
         </div>
 

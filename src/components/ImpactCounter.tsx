@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const STATS = [
   {
-    value: 10000,
+    value: 500,
     label: 'Books Collected',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -12,7 +12,7 @@ const STATS = [
     ),
   },
   {
-    value: 250,
+    value: 10,
     label: 'Read-Aloud Sessions',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -24,7 +24,7 @@ const STATS = [
     ),
   },
   {
-    value: 15,
+    value: 10,
     label: 'Schools Impacted',
     icon: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
