@@ -34,7 +34,7 @@ export default function MedicalWhy() {
     <section
       id="medical-why"
       ref={ref}
-      className="relative bg-navy-light overflow-hidden"
+      className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
       {/* Decorative blob */}

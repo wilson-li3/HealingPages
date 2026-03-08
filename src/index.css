@@ -26,10 +26,20 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-snap-type: y mandatory;
+}
+
 body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Each major section snaps to viewport */
+.snap-section {
+  scroll-snap-align: start;
+  min-height: 100vh;
 }
 
 @media (hover: hover) {

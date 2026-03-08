@@ -2,8 +2,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import ImpactCounter from './components/ImpactCounter';
 import MedicalWhy from './components/MedicalWhy';
-import About from './components/About';
-import Footer from './components/Footer';
+import { Founder, Partners, Acknowledgements } from './components/About';
 import CustomCursor from './components/CustomCursor';
 
 function App() {
@@ -14,8 +13,9 @@ function App() {
       <Hero />
       <ImpactCounter />
       <MedicalWhy />
-      <About />
-      <Footer />
+      <Founder />
+      <Partners />
+      <Acknowledgements />
     </main>
   );
 }

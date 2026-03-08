@@ -81,7 +81,7 @@ export default function ImpactCounter() {
     <section
       id="impact"
       ref={ref}
-      className="relative bg-navy overflow-hidden"
+      className="relative bg-navy overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
       {/* Subtle top border glow */}

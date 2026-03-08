@@ -94,7 +94,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full"
+      className="relative w-full snap-section"
       style={{ height: '400vh' }}
       aria-label="Healing Pages hero"
     >

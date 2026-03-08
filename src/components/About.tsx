@@ -1,5 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 
+function useInView(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
+      { threshold },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, inView };
+}
+
 const PARTNERS = [
   'UPMC Children\'s Hospital of Pittsburgh',
   'Pittsburgh Public Schools',
@@ -15,39 +31,29 @@ const ACKNOWLEDGEMENTS = [
   'Families who share the gift of literacy with their communities',
 ];
 
-export default function About() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setInView(true); obs.disconnect(); } },
-      { threshold: 0.1 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+/* ── Founder ── */
+export function Founder() {
+  const { ref, inView } = useInView();
 
   return (
-    <section id="about" ref={ref} className="relative bg-navy overflow-hidden" style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}>
-      {/* Top border */}
+    <section
+      id="about"
+      ref={ref}
+      className="relative bg-navy overflow-hidden snap-section flex items-center"
+      style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
+    >
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
       <div className="relative w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
-
-        {/* ── Founder Section ── */}
         <div
           className={`grid grid-cols-1 lg:grid-cols-[300px_1fr] items-start transition-all duration-700 ${
             inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
-          style={{ gap: 'clamp(3rem, 6vw, 5rem)', marginBottom: 'clamp(6rem, 12vw, 10rem)' }}
+          style={{ gap: 'clamp(3rem, 6vw, 5rem)' }}
         >
           {/* Photo placeholder */}
           <div className="relative mx-auto lg:mx-0 w-full" style={{ maxWidth: '300px' }}>
             <div className="aspect-[3/4] rounded-2xl bg-navy-light border border-white/[0.06] overflow-hidden flex items-center justify-center">
-              {/* Replace with <img src="/founder.jpg" alt="Wilson Li, founder of Healing Pages" className="w-full h-full object-cover" /> */}
               <div className="text-center px-6">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/20 mx-auto mb-3">
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -56,7 +62,6 @@ export default function About() {
                 <p className="text-white/20 text-xs font-body">Your photo here</p>
               </div>
             </div>
-            {/* Decorative corner accent */}
             <div className="absolute -bottom-3 -right-3 w-20 h-20 border-r-2 border-b-2 border-accent-yellow/20 rounded-br-2xl" aria-hidden="true" />
           </div>
 
@@ -69,7 +74,7 @@ export default function About() {
               className="font-display text-white leading-[0.95]"
               style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', marginTop: '1.25rem', marginBottom: '1.75rem' }}
             >
-              Wilson Li
+              Alton Chung
             </h2>
             <div className="text-white/55 leading-relaxed font-body" style={{ fontSize: 'clamp(0.95rem, 1.6vw, 1.0625rem)' }}>
               <p>
@@ -87,54 +92,108 @@ export default function About() {
                 "A book in a child's hands isn't just pages — it's possibility."
               </p>
             </div>
-            {/* Decorative line */}
             <div className="flex items-center gap-1.5" style={{ marginTop: '2rem' }}>
               <span className="inline-block w-10 h-[2px] bg-accent-yellow rounded-full" />
               <span className="inline-block w-2 h-[2px] bg-accent-yellow/40 rounded-full" />
             </div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* ── Partners ── */}
-        <div
-          className={`transition-all duration-700 delay-200 ${
-            inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-          style={{ marginBottom: 'clamp(6rem, 12vw, 10rem)' }}
-        >
-          <div className="text-center" style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)' }}>
-            <span className="text-medical-blue text-xs font-semibold tracking-[0.2em] uppercase font-body block">
-              Current Partners
-            </span>
-            <h3
-              className="font-display text-white leading-[0.95]"
-              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1.25rem' }}
-            >
-              Building literacy together
-            </h3>
-          </div>
+/* ── Partners ── */
+export function Partners() {
+  const { ref, inView } = useInView();
 
-          <div className="flex flex-wrap justify-center" style={{ gap: 'clamp(0.75rem, 1.5vw, 1.25rem)' }}>
-            {PARTNERS.map((partner) => (
-              <div
-                key={partner}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/50 text-sm font-body font-medium transition-colors duration-200 hover:border-medical-blue/30 hover:text-white/70 cursor-default"
-                style={{ padding: '1rem 1.75rem' }}
-              >
-                {partner}
-              </div>
-            ))}
-          </div>
+  return (
+    <section
+      id="partners"
+      ref={ref}
+      className="relative bg-navy-light overflow-hidden snap-section flex items-center"
+      style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
+    >
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      <div
+        className={`relative w-full transition-all duration-700 ${
+          inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}
+      >
+        <div className="text-center" style={{ marginBottom: 'clamp(3rem, 6vw, 4.5rem)' }}>
+          <span className="text-medical-blue text-xs font-semibold tracking-[0.2em] uppercase font-body block">
+            Current Partners
+          </span>
+          <h3
+            className="font-display text-white leading-[0.95]"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1.25rem' }}
+          >
+            Building literacy together
+          </h3>
         </div>
 
-        {/* ── Acknowledgements ── */}
-        <div
-          id="acknowledgements"
-          className={`transition-all duration-700 delay-300 ${
-            inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <div className="text-center" style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)' }}>
+        <div className="flex flex-wrap justify-center" style={{ gap: 'clamp(0.75rem, 1.5vw, 1.25rem)' }}>
+          {PARTNERS.map((partner) => (
+            <div
+              key={partner}
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/50 text-sm font-body font-medium transition-colors duration-200 hover:border-medical-blue/30 hover:text-white/70 cursor-default"
+              style={{ padding: '1rem 1.75rem' }}
+            >
+              {partner}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Acknowledgements (includes footer at bottom) ── */
+
+const FOOTER_LINKS = [
+  {
+    heading: 'Pages',
+    items: [
+      { label: 'Impact', href: '#impact' },
+      { label: 'Medical Why', href: '#medical-why' },
+      { label: 'About', href: '#about' },
+      { label: 'Partners', href: '#partners' },
+      { label: 'Acknowledgements', href: '#acknowledgements' },
+    ],
+  },
+  {
+    heading: 'Get Involved',
+    items: [
+      { label: 'Donate Books', href: '#donate' },
+      { label: 'Schedule Pickup', href: '#schedule' },
+      { label: 'Volunteer', href: '#volunteer' },
+    ],
+  },
+];
+
+export function Acknowledgements() {
+  const { ref, inView } = useInView();
+
+  return (
+    <section
+      id="acknowledgements"
+      ref={ref}
+      className="relative bg-navy overflow-hidden snap-section flex flex-col justify-between"
+      style={{ minHeight: '100vh' }}
+    >
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+
+      {/* Acknowledgements content */}
+      <div
+        className={`relative w-full flex-1 flex items-center transition-all duration-700 ${
+          inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+        style={{ padding: 'clamp(4rem, 8vw, 6rem) 0' }}
+      >
+        <div className="w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
+          <div className="text-center" style={{ marginBottom: 'clamp(3rem, 6vw, 4.5rem)' }}>
             <span className="text-accent-orange text-xs font-semibold tracking-[0.2em] uppercase font-body block">
               Thank You
             </span>
@@ -166,6 +225,45 @@ export default function About() {
           </div>
         </div>
       </div>
+
+      {/* Footer pinned to bottom */}
+      <footer className="border-t border-white/[0.06]">
+        <div className="w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
+          <div
+            className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr]"
+            style={{ gap: 'clamp(2rem, 4vw, 3rem)', padding: 'clamp(2.5rem, 5vw, 3.5rem) 0' }}
+          >
+            <div>
+              <a href="/" className="font-display text-white leading-none select-none" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)' }}>
+                Healing Pages
+              </a>
+              <p className="text-white/40 text-xs leading-relaxed max-w-xs" style={{ marginTop: '0.75rem' }}>
+                Prescribing literacy to children in Pittsburgh's hospitals and schools.
+              </p>
+            </div>
+            {FOOTER_LINKS.map((col) => (
+              <div key={col.heading}>
+                <h4 className="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/30" style={{ marginBottom: '1rem' }}>
+                  {col.heading}
+                </h4>
+                <ul className="flex flex-col" style={{ gap: '0.625rem' }}>
+                  {col.items.map((link) => (
+                    <li key={link.href}>
+                      <a href={link.href} className="text-xs text-white/45 transition-colors duration-200 hover:text-white cursor-pointer">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between" style={{ padding: '1rem 0', gap: '0.5rem' }}>
+            <p className="text-white/20 text-xs">&copy; {new Date().getFullYear()} Healing Pages. Pittsburgh, PA.</p>
+            <p className="text-white/20 text-xs">Made with care for kids who need it most.</p>
+          </div>
+        </div>
+      </footer>
     </section>
   );
 }

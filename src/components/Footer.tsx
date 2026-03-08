@@ -5,6 +5,7 @@ const LINKS = [
       { label: 'Impact', href: '#impact' },
       { label: 'Medical Why', href: '#medical-why' },
       { label: 'About', href: '#about' },
+      { label: 'Partners', href: '#partners' },
       { label: 'Acknowledgements', href: '#acknowledgements' },
     ],
   },
@@ -20,7 +21,9 @@ const LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-navy border-t border-white/[0.06]">
+    <footer
+      className="relative bg-navy border-t border-white/[0.06]"
+    >
       <div className="w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
         {/* Main footer grid */}
         <div
