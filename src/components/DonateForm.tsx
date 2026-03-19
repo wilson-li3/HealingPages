@@ -27,6 +27,7 @@ interface FormData {
   book_quantity: string;
   book_condition: number | null;
   message: string;
+  website: string;
 }
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -39,6 +40,7 @@ const INITIAL_FORM: FormData = {
   book_quantity: '',
   book_condition: null,
   message: '',
+  website: '',
 };
 
 const CONDITION_LABELS = ['Poor', 'Fair', 'Good', 'Very Good', 'Like New'];
@@ -68,6 +70,12 @@ export default function DonateForm() {
     const errs = validate(form);
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
+
+    // Honeypot: if a bot filled the hidden field, fake success silently
+    if (form.website) {
+      setStatus('success');
+      return;
+    }
 
     setStatus('submitting');
     setSubmitError('');
@@ -168,6 +176,18 @@ export default function DonateForm() {
                   {submitError}
                 </div>
               )}
+
+              {/* Honeypot field — hidden from real users, bots auto-fill it */}
+              <input
+                type="text"
+                name="website"
+                value={form.website}
+                onChange={(e) => set('website', e.target.value)}
+                autoComplete="off"
+                tabIndex={-1}
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(0.875rem, 2vw, 1.25rem)' }}>
                 {/* Name */}
