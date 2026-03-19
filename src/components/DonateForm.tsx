@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import FloatingDoodles, { DONATE_DOODLES } from './FloatingDoodles';
 import PolaroidWall, { DONATE_POLAROIDS } from './PolaroidWall';
 import { supabase } from '../lib/supabase';
+import AddressAutocomplete from './AddressAutocomplete';
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ function validate(data: FormData): Record<string, string> {
   const errors: Record<string, string> = {};
   if (!data.name || data.name.trim().length < 2) errors.name = 'Name must be at least 2 characters';
   if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errors.email = 'Please enter a valid email';
+  if (!data.phone || !/^\+?[\d\s\-().]{7,}$/.test(data.phone.trim())) errors.phone = 'Please enter a valid phone number';
   if (!data.pickup_address || data.pickup_address.trim().length < 5) errors.pickup_address = 'Address must be at least 5 characters';
   if (!data.book_quantity || Number(data.book_quantity) < 1) errors.book_quantity = 'At least 1 book required';
   if (data.book_condition === null) errors.book_condition = 'Please select a condition';
@@ -59,16 +61,30 @@ export default function DonateForm() {
   const { ref, inView } = useInView();
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<FormStatus>('idle');
   const [submitError, setSubmitError] = useState('');
 
-  const set = (field: keyof FormData, value: string | number | null) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const set = (field: keyof FormData, value: string | number | null) => {
+    setForm((prev) => {
+      const next = { ...prev, [field]: value };
+      // Re-validate on change so errors clear immediately
+      setErrors(validate(next));
+      return next;
+    });
+  };
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    setErrors(validate(form));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate(form);
     setErrors(errs);
+    // Mark all fields as touched so errors show
+    setTouched({ name: true, email: true, phone: true, pickup_address: true, book_quantity: true, book_condition: true });
     if (Object.keys(errs).length > 0) return;
 
     // Honeypot: if a bot filled the hidden field, fake success silently
@@ -89,7 +105,7 @@ export default function DonateForm() {
     const { error } = await supabase.from('donations').insert({
       name: form.name.trim(),
       email: form.email.trim(),
-      phone: form.phone.trim() || null,
+      phone: form.phone.trim(),
       pickup_address: form.pickup_address.trim(),
       book_quantity: Number(form.book_quantity),
       book_condition: form.book_condition,
@@ -101,12 +117,25 @@ export default function DonateForm() {
       setStatus('error');
     } else {
       setStatus('success');
+      // Fire-and-forget email notification
+      supabase.functions.invoke('send-notification', {
+        body: {
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          pickup_address: form.pickup_address.trim(),
+          book_quantity: Number(form.book_quantity),
+          book_condition: form.book_condition,
+          message: form.message.trim() || null,
+        },
+      }).catch(() => {});
     }
   };
 
   const reset = () => {
     setForm(INITIAL_FORM);
     setErrors({});
+    setTouched({});
     setStatus('idle');
     setSubmitError('');
   };
@@ -197,11 +226,12 @@ export default function DonateForm() {
                     type="text"
                     value={form.name}
                     onChange={(e) => set('name', e.target.value)}
+                    onBlur={() => handleBlur('name')}
                     placeholder="Your name"
                     className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm font-body placeholder:text-white/25 focus:border-accent-yellow/40 focus:bg-white/[0.06] outline-none transition-colors duration-200"
                     style={{ padding: '0.75rem 1rem' }}
                   />
-                  {errors.name && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.name}</p>}
+                  {touched.name && errors.name && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.name}</p>}
                 </div>
 
                 {/* Email */}
@@ -211,38 +241,39 @@ export default function DonateForm() {
                     type="email"
                     value={form.email}
                     onChange={(e) => set('email', e.target.value)}
+                    onBlur={() => handleBlur('email')}
                     placeholder="you@example.com"
                     className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm font-body placeholder:text-white/25 focus:border-accent-yellow/40 focus:bg-white/[0.06] outline-none transition-colors duration-200"
                     style={{ padding: '0.75rem 1rem' }}
                   />
-                  {errors.email && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.email}</p>}
+                  {touched.email && errors.email && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.email}</p>}
                 </div>
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Phone</label>
+                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Phone *</label>
                   <input
                     type="tel"
                     value={form.phone}
                     onChange={(e) => set('phone', e.target.value)}
-                    placeholder="(optional)"
+                    onBlur={() => handleBlur('phone')}
+                    placeholder="(555) 123-4567"
                     className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm font-body placeholder:text-white/25 focus:border-accent-yellow/40 focus:bg-white/[0.06] outline-none transition-colors duration-200"
                     style={{ padding: '0.75rem 1rem' }}
                   />
+                  {touched.phone && errors.phone && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.phone}</p>}
                 </div>
 
                 {/* Pickup Address */}
                 <div>
                   <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Pickup Address *</label>
-                  <input
-                    type="text"
+                  <AddressAutocomplete
                     value={form.pickup_address}
-                    onChange={(e) => set('pickup_address', e.target.value)}
+                    onChange={(val) => set('pickup_address', val)}
+                    onBlur={() => handleBlur('pickup_address')}
+                    error={touched.pickup_address ? errors.pickup_address : undefined}
                     placeholder="123 Main St, Pittsburgh, PA"
-                    className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm font-body placeholder:text-white/25 focus:border-accent-yellow/40 focus:bg-white/[0.06] outline-none transition-colors duration-200"
-                    style={{ padding: '0.75rem 1rem' }}
                   />
-                  {errors.pickup_address && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.pickup_address}</p>}
                 </div>
 
                 {/* Book Quantity */}
@@ -253,11 +284,12 @@ export default function DonateForm() {
                     min="1"
                     value={form.book_quantity}
                     onChange={(e) => set('book_quantity', e.target.value)}
+                    onBlur={() => handleBlur('book_quantity')}
                     placeholder="How many books?"
                     className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl text-white text-sm font-body placeholder:text-white/25 focus:border-accent-yellow/40 focus:bg-white/[0.06] outline-none transition-colors duration-200"
                     style={{ padding: '0.75rem 1rem' }}
                   />
-                  {errors.book_quantity && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.book_quantity}</p>}
+                  {touched.book_quantity && errors.book_quantity && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.book_quantity}</p>}
                 </div>
 
                 {/* Book Condition */}
@@ -271,7 +303,7 @@ export default function DonateForm() {
                         <button
                           key={value}
                           type="button"
-                          onClick={() => set('book_condition', value)}
+                          onClick={() => { set('book_condition', value); setTouched((prev) => ({ ...prev, book_condition: true })); }}
                           className={`flex-1 flex flex-col items-center rounded-lg border text-xs font-body transition-colors duration-200 cursor-pointer ${
                             selected
                               ? 'border-accent-yellow bg-accent-yellow/15 text-accent-yellow'
@@ -285,7 +317,7 @@ export default function DonateForm() {
                       );
                     })}
                   </div>
-                  {errors.book_condition && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.book_condition}</p>}
+                  {touched.book_condition && errors.book_condition && <p className="text-red-400/80 text-xs font-body" style={{ marginTop: '0.25rem' }}>{errors.book_condition}</p>}
                 </div>
 
                 {/* Message */}
