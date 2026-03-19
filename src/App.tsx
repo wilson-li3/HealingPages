@@ -3,18 +3,18 @@ import Hero from './components/Hero';
 import ImpactCounter from './components/ImpactCounter';
 import MedicalWhy from './components/MedicalWhy';
 import { Founder, Partners, Acknowledgements } from './components/About';
-import CustomCursor from './components/CustomCursor';
+import DonateForm from './components/DonateForm';
 
 function App() {
   return (
     <main>
-      <CustomCursor />
       <Header />
       <Hero />
       <ImpactCounter />
       <MedicalWhy />
       <Founder />
       <Partners />
+      <DonateForm />
       <Acknowledgements />
     </main>
   );

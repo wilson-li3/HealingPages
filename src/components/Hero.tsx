@@ -161,7 +161,7 @@ export default function Hero() {
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
             </svg>
             <span className="text-accent-yellow text-sm font-medium tracking-wide font-body">
-              10,000+ books prescribed to Pittsburgh kids
+              500+ books prescribed to Pittsburgh & Philadelphia kids
             </span>
           </div>
 
@@ -205,14 +205,14 @@ export default function Hero() {
 
           {/* Subheadline */}
           <p
-            className={`text-white/85 font-body font-light max-w-2xl mx-auto mb-12 leading-relaxed transition-all duration-700 delay-300 ${
+            className={`text-white/85 font-body font-light max-w-2xl mx-auto leading-relaxed transition-all duration-700 delay-300 ${
               isLoaded
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-6'
             }`}
-            style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)' }}
+            style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', marginBottom: '3rem' }}
           >
-            Prescribing literacy to children in Pittsburgh's hospitals and schools —{' '}
+            Prescribing literacy to children in Pittsburgh & Philadelphia hospitals and schools —{' '}
             <span className="text-white font-normal">because every child deserves a story.</span>
           </p>
 

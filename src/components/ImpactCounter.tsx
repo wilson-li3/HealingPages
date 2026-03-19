@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import FloatingDoodles, { IMPACT_DOODLES } from './FloatingDoodles';
+import WavyDivider from './WavyDivider';
+import PolaroidWall, { IMPACT_POLAROIDS } from './PolaroidWall';
 
 const STATS = [
   {
@@ -84,8 +87,9 @@ export default function ImpactCounter() {
       className="relative bg-navy overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      {/* Subtle top border glow */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-yellow/20 to-transparent" />
+      <PolaroidWall polaroids={IMPACT_POLAROIDS} />
+      <FloatingDoodles doodles={IMPACT_DOODLES} color="var(--color-accent-yellow)" />
+      <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
 
       {/* Background texture */}
       <div
@@ -115,7 +119,7 @@ export default function ImpactCounter() {
           {STATS.map((stat, i) => (
             <div
               key={stat.label}
-              className={`group relative text-center rounded-2xl border border-white/[0.06] bg-white/[0.02] transition-all duration-700 ${
+              className={`group relative text-center rounded-2xl border border-white/[0.06] bg-white/[0.02] card-playful wiggle-hover transition-all duration-700 ${
                 inView
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'

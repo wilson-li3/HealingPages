@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import FloatingDoodles, { MEDICAL_DOODLES } from './FloatingDoodles';
+import PolaroidWall, { MEDICAL_POLAROIDS } from './PolaroidWall';
 
 const EVIDENCE = [
   {
@@ -11,7 +13,7 @@ const EVIDENCE = [
   },
   {
     stat: '1 in 4',
-    description: 'Pittsburgh children live in book deserts with zero age-appropriate books at home',
+    description: 'Pittsburgh and Philadelphia children live in book deserts with zero age-appropriate books at home',
   },
 ];
 
@@ -37,6 +39,9 @@ export default function MedicalWhy() {
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
+      <PolaroidWall polaroids={MEDICAL_POLAROIDS} />
+      <FloatingDoodles doodles={MEDICAL_DOODLES} color="var(--color-medical-blue)" />
+
       {/* Decorative blob */}
       <div
         className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full opacity-[0.03]"
@@ -95,7 +100,7 @@ export default function MedicalWhy() {
             {EVIDENCE.map((item, i) => (
               <div
                 key={item.stat}
-                className={`relative rounded-2xl border border-white/[0.06] bg-white/[0.02] transition-all duration-700 ${
+                className={`relative rounded-2xl border border-white/[0.06] bg-white/[0.02] card-playful transition-all duration-700 ${
                   inView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
                 }`}
                 style={{ padding: 'clamp(1.5rem, 3vw, 2.25rem)', transitionDelay: `${200 + i * 150}ms` }}

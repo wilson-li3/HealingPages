@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import FloatingDoodles, { ABOUT_DOODLES, PARTNERS_DOODLES, ACK_DOODLES } from './FloatingDoodles';
+import WavyDivider from './WavyDivider';
+import PolaroidWall, { ABOUT_POLAROIDS, PARTNERS_POLAROIDS, ACK_POLAROIDS } from './PolaroidWall';
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -42,7 +45,9 @@ export function Founder() {
       className="relative bg-navy overflow-hidden snap-section flex items-center"
       style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <PolaroidWall polaroids={ABOUT_POLAROIDS} />
+      <FloatingDoodles doodles={ABOUT_DOODLES} color="var(--color-accent-yellow)" />
+      <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
 
       <div className="relative w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
         <div
@@ -83,7 +88,7 @@ export function Founder() {
                 that might otherwise stay closed.
               </p>
               <p style={{ marginTop: '1.25rem' }}>
-                I started Healing Pages because I believe every child in Pittsburgh deserves
+                I started Healing Pages because I believe every child deserves
                 that spark — whether they're in a hospital bed, a classroom, or at home.
                 What began as collecting books from neighbors has grown into a city-wide
                 initiative partnering with hospitals and schools across the region.
@@ -114,7 +119,8 @@ export function Partners() {
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <PolaroidWall polaroids={PARTNERS_POLAROIDS} />
+      <FloatingDoodles doodles={PARTNERS_DOODLES} color="var(--color-medical-blue)" />
 
       <div
         className={`relative w-full transition-all duration-700 ${
@@ -138,7 +144,7 @@ export function Partners() {
           {PARTNERS.map((partner) => (
             <div
               key={partner}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/50 text-sm font-body font-medium transition-colors duration-200 hover:border-medical-blue/30 hover:text-white/70 cursor-default"
+              className="rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/50 text-sm font-body font-medium card-playful transition-colors duration-200 hover:border-medical-blue/30 hover:text-white/70 cursor-default"
               style={{ padding: '1rem 1.75rem' }}
             >
               {partner}
@@ -183,7 +189,8 @@ export function Acknowledgements() {
       className="relative bg-navy overflow-hidden snap-section flex flex-col justify-between"
       style={{ minHeight: '100vh' }}
     >
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <PolaroidWall polaroids={ACK_POLAROIDS} />
+      <FloatingDoodles doodles={ACK_DOODLES} color="var(--color-accent-orange)" />
 
       {/* Acknowledgements content */}
       <div
@@ -209,7 +216,7 @@ export function Acknowledgements() {
             {ACKNOWLEDGEMENTS.map((item, i) => (
               <div
                 key={i}
-                className="flex items-start rounded-2xl border border-white/[0.04] bg-white/[0.015]"
+                className="flex items-start rounded-2xl border border-white/[0.04] bg-white/[0.015] card-playful"
                 style={{ gap: '1.25rem', padding: 'clamp(1.25rem, 2.5vw, 1.75rem)' }}
               >
                 <div className="shrink-0 mt-0.5">
@@ -238,7 +245,7 @@ export function Acknowledgements() {
                 Healing Pages
               </a>
               <p className="text-white/40 text-xs leading-relaxed max-w-xs" style={{ marginTop: '0.75rem' }}>
-                Prescribing literacy to children in Pittsburgh's hospitals and schools.
+                Prescribing literacy to children in Pittsburgh & Philadelphia's hospitals and schools.
               </p>
             </div>
             {FOOTER_LINKS.map((col) => (
@@ -259,7 +266,7 @@ export function Acknowledgements() {
             ))}
           </div>
           <div className="border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between" style={{ padding: '1rem 0', gap: '0.5rem' }}>
-            <p className="text-white/20 text-xs">&copy; {new Date().getFullYear()} Healing Pages. Pittsburgh, PA.</p>
+            <p className="text-white/20 text-xs">&copy; {new Date().getFullYear()} Healing Pages. Pittsburgh & Philadelphia, PA.</p>
             <p className="text-white/20 text-xs">Made with care for kids who need it most.</p>
           </div>
         </div>

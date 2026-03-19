@@ -8,6 +8,48 @@ const NAV_LINKS = [
   { label: 'Acknowledgements', href: '#acknowledgements' },
 ];
 
+// Section IDs in scroll order — used by the IntersectionObserver
+const SECTION_IDS = ['acknowledgements', 'donate', 'partners', 'about', 'medical-why', 'impact'];
+
+// Map section IDs to their nav href
+function sectionToHref(id: string): string {
+  // partners and donate don't have their own nav links, roll up to about
+  if (id === 'partners' || id === 'donate') return '#about';
+  return `#${id}`;
+}
+
+function smoothScrollTo(href: string) {
+  if (href === '/') {
+    // Disable snap, scroll to top, re-enable snap
+    document.documentElement.style.scrollSnapType = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const restore = () => {
+      document.documentElement.style.scrollSnapType = '';
+      window.removeEventListener('scrollend', restore);
+    };
+    window.addEventListener('scrollend', restore, { once: true });
+    // Fallback in case scrollend doesn't fire
+    setTimeout(() => { document.documentElement.style.scrollSnapType = ''; }, 1200);
+    return;
+  }
+
+  const id = href.replace('#', '');
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  // Temporarily disable scroll-snap so smooth scrolling works
+  document.documentElement.style.scrollSnapType = 'none';
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const restore = () => {
+    document.documentElement.style.scrollSnapType = '';
+    window.removeEventListener('scrollend', restore);
+  };
+  window.addEventListener('scrollend', restore, { once: true });
+  // Fallback timeout
+  setTimeout(() => { document.documentElement.style.scrollSnapType = ''; }, 1200);
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [active, setActive] = useState('/');
@@ -17,6 +59,33 @@ export default function Header() {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Track which section is in view
+  useEffect(() => {
+    const handleScroll = () => {
+      // If near top, it's Home
+      if (window.scrollY < window.innerHeight * 0.5) {
+        setActive('/');
+        return;
+      }
+
+      // Find the first section whose top is above the middle of the viewport
+      const mid = window.innerHeight * 0.5;
+      for (const id of SECTION_IDS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= mid && rect.bottom > 0) {
+          setActive(sectionToHref(id));
+          return;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // run once on mount
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -31,7 +100,7 @@ export default function Header() {
       <div style={{ paddingLeft: 'clamp(2rem, 5vw, 5rem)', paddingRight: 'clamp(2rem, 5vw, 5rem)' }}>
         <div className="relative flex items-center justify-between h-16 md:h-[72px]">
           {/* Logo — left */}
-          <a href="/" className="relative z-10 group font-display text-white text-3xl leading-none select-none transition-opacity duration-200 hover:opacity-80">
+          <a href="/" onClick={(e) => { e.preventDefault(); smoothScrollTo('/'); }} className="relative z-10 group font-display text-white text-3xl leading-none select-none transition-opacity duration-200 hover:opacity-80 cursor-pointer">
             Healing Pages
             {/* Hand-drawn underline accent */}
             <svg
@@ -57,8 +126,8 @@ export default function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => setActive(link.href)}
-                className={`pointer-events-auto relative text-sm transition-colors duration-200 py-1 ${
+                onClick={(e) => { e.preventDefault(); smoothScrollTo(link.href); }}
+                className={`pointer-events-auto relative text-sm transition-colors duration-200 py-1 cursor-pointer ${
                   active === link.href
                     ? 'text-white'
                     : 'text-white/50 hover:text-white/80'
@@ -80,6 +149,7 @@ export default function Header() {
           {/* CTA — right */}
           <a
             href="#donate"
+            onClick={(e) => { e.preventDefault(); smoothScrollTo('#donate'); }}
             className="relative z-10 hidden md:inline-flex items-center text-sm text-white/90 border border-white/30 transition-colors duration-200 hover:bg-white hover:text-navy hover:border-white focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
             style={{ padding: '0.75rem 2rem' }}
           >
@@ -124,8 +194,8 @@ export default function Header() {
             <a
               key={link.href}
               href={link.href}
-              onClick={() => { setActive(link.href); setMobileOpen(false); }}
-              className={`px-4 py-3 text-sm rounded-lg transition-colors duration-200 ${
+              onClick={(e) => { e.preventDefault(); setMobileOpen(false); smoothScrollTo(link.href); }}
+              className={`px-4 py-3 text-sm rounded-lg transition-colors duration-200 cursor-pointer ${
                 active === link.href
                   ? 'text-white bg-accent-yellow/10'
                   : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
@@ -139,7 +209,7 @@ export default function Header() {
           ))}
           <a
             href="#donate"
-            onClick={() => setMobileOpen(false)}
+            onClick={(e) => { e.preventDefault(); setMobileOpen(false); smoothScrollTo('#donate'); }}
             className="mt-2 text-sm text-center text-white/90 border border-white/30 transition-colors duration-200 hover:bg-white hover:text-navy hover:border-white"
             style={{ padding: '0.75rem 2rem' }}
           >
