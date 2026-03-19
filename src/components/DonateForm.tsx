@@ -31,7 +31,7 @@ interface FormData {
   website: string;
 }
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error' | 'throttled';
 
 const INITIAL_FORM: FormData = {
   name: '',
@@ -64,6 +64,7 @@ export default function DonateForm() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<FormStatus>('idle');
   const [submitError, setSubmitError] = useState('');
+  const lastSubmitRef = useRef<number>(0);
 
   const set = (field: keyof FormData, value: string | number | null) => {
     setForm((prev) => {
@@ -93,6 +94,16 @@ export default function DonateForm() {
       return;
     }
 
+    // Client-side rate limiting: 30s between submissions
+    const now = Date.now();
+    const elapsed = now - lastSubmitRef.current;
+    if (lastSubmitRef.current && elapsed < 30_000) {
+      const remaining = Math.ceil((30_000 - elapsed) / 1000);
+      setSubmitError(`Please wait ${remaining} seconds before submitting again.`);
+      setStatus('throttled');
+      return;
+    }
+
     setStatus('submitting');
     setSubmitError('');
 
@@ -116,6 +127,7 @@ export default function DonateForm() {
       setSubmitError('Something went wrong. Please try again.');
       setStatus('error');
     } else {
+      lastSubmitRef.current = Date.now();
       setStatus('success');
       // Fire-and-forget email notification
       supabase.functions.invoke('send-notification', {
@@ -197,14 +209,17 @@ export default function DonateForm() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
-              {submitError && (
-                <div
-                  className="rounded-xl border border-red-400/20 bg-red-400/5 text-red-300 text-sm font-body"
-                  style={{ padding: '0.75rem 1rem', marginBottom: '1.25rem' }}
-                >
-                  {submitError}
-                </div>
-              )}
+              <div aria-live="polite">
+                {submitError && (
+                  <div
+                    className="rounded-xl border border-red-400/20 bg-red-400/5 text-red-300 text-sm font-body"
+                    style={{ padding: '0.75rem 1rem', marginBottom: '1.25rem' }}
+                    role="alert"
+                  >
+                    {submitError}
+                  </div>
+                )}
+              </div>
 
               {/* Honeypot field — hidden from real users, bots auto-fill it */}
               <input
@@ -221,8 +236,9 @@ export default function DonateForm() {
               <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(0.875rem, 2vw, 1.25rem)' }}>
                 {/* Name */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Name *</label>
+                  <label htmlFor="donate-name" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Name *</label>
                   <input
+                    id="donate-name"
                     type="text"
                     value={form.name}
                     onChange={(e) => set('name', e.target.value)}
@@ -236,8 +252,9 @@ export default function DonateForm() {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Email *</label>
+                  <label htmlFor="donate-email" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Email *</label>
                   <input
+                    id="donate-email"
                     type="email"
                     value={form.email}
                     onChange={(e) => set('email', e.target.value)}
@@ -251,8 +268,9 @@ export default function DonateForm() {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Phone *</label>
+                  <label htmlFor="donate-phone" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Phone *</label>
                   <input
+                    id="donate-phone"
                     type="tel"
                     value={form.phone}
                     onChange={(e) => set('phone', e.target.value)}
@@ -266,7 +284,7 @@ export default function DonateForm() {
 
                 {/* Pickup Address */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Pickup Address *</label>
+                  <label htmlFor="donate-address" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Pickup Address *</label>
                   <AddressAutocomplete
                     value={form.pickup_address}
                     onChange={(val) => set('pickup_address', val)}
@@ -278,8 +296,9 @@ export default function DonateForm() {
 
                 {/* Book Quantity */}
                 <div>
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Book Quantity *</label>
+                  <label htmlFor="donate-quantity" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Book Quantity *</label>
                   <input
+                    id="donate-quantity"
                     type="number"
                     min="1"
                     value={form.book_quantity}
@@ -322,8 +341,9 @@ export default function DonateForm() {
 
                 {/* Message */}
                 <div className="md:col-span-2">
-                  <label className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Message</label>
+                  <label htmlFor="donate-message" className="block text-white/40 text-xs font-body" style={{ marginBottom: '0.375rem' }}>Message</label>
                   <textarea
+                    id="donate-message"
                     value={form.message}
                     onChange={(e) => set('message', e.target.value)}
                     placeholder="Anything else you'd like us to know? (optional)"
@@ -338,7 +358,7 @@ export default function DonateForm() {
               <div style={{ marginTop: 'clamp(1.25rem, 3vw, 1.75rem)' }}>
                 <button
                   type="submit"
-                  disabled={status === 'submitting'}
+                  disabled={status === 'submitting' || status === 'throttled'}
                   className="w-full sm:w-auto bg-accent-yellow text-navy font-semibold text-sm font-body rounded-xl transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer"
                   style={{ padding: '0.875rem 2.5rem' }}
                 >
