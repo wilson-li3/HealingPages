@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import FloatingDoodles, { MEDICAL_DOODLES } from './FloatingDoodles';
-import PolaroidWall, { MEDICAL_POLAROIDS } from './PolaroidWall';
+import PolaroidWall from './PolaroidWall';
+import { usePolaroids } from '../hooks/useSiteData';
 
 const EVIDENCE = [
   {
@@ -20,6 +21,7 @@ const EVIDENCE = [
 export default function MedicalWhy() {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const { polaroids } = usePolaroids('medical');
 
   useEffect(() => {
     const el = ref.current;
@@ -39,7 +41,7 @@ export default function MedicalWhy() {
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <PolaroidWall polaroids={MEDICAL_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={MEDICAL_DOODLES} color="var(--color-medical-blue)" />
 
       {/* Decorative blob */}

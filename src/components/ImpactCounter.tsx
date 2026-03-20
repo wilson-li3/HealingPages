@@ -1,42 +1,38 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import FloatingDoodles, { IMPACT_DOODLES } from './FloatingDoodles';
 import WavyDivider from './WavyDivider';
-import PolaroidWall, { IMPACT_POLAROIDS } from './PolaroidWall';
+import PolaroidWall from './PolaroidWall';
+import { useStats, usePolaroids } from '../hooks/useSiteData';
 
-const STATS = [
-  {
-    value: 500,
-    label: 'Books Collected',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-      </svg>
-    ),
-  },
-  {
-    value: 10,
-    label: 'Read-Aloud Sessions',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
-        <path d="M19 10v2a7 7 0 01-14 0v-2" />
-        <line x1="12" y1="19" x2="12" y2="23" />
-        <line x1="8" y1="23" x2="16" y2="23" />
-      </svg>
-    ),
-  },
-  {
-    value: 10,
-    label: 'Schools Impacted',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    ),
-  },
-];
+const STAT_ICONS: Record<string, ReactNode> = {
+  books_collected: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+    </svg>
+  ),
+  read_alouds: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+      <path d="M19 10v2a7 7 0 01-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="23" />
+      <line x1="8" y1="23" x2="16" y2="23" />
+    </svg>
+  ),
+  schools_impacted: (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  ),
+};
+
+// Fallback icon for stats added via admin that don't have a predefined icon
+const DEFAULT_ICON = (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
 
 function useInView(threshold = 0.3) {
   const ref = useRef<HTMLDivElement>(null);
@@ -79,6 +75,8 @@ function AnimatedNumber({ target, inView }: { target: number; inView: boolean })
 
 export default function ImpactCounter() {
   const { ref, inView } = useInView(0.2);
+  const { stats } = useStats();
+  const { polaroids } = usePolaroids('impact');
 
   return (
     <section
@@ -87,7 +85,7 @@ export default function ImpactCounter() {
       className="relative bg-navy overflow-hidden snap-section flex items-center"
       style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <PolaroidWall polaroids={IMPACT_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={IMPACT_DOODLES} color="var(--color-accent-yellow)" />
       <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
 
@@ -116,9 +114,9 @@ export default function ImpactCounter() {
 
         {/* Stats grid */}
         <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'clamp(1.5rem, 3vw, 2rem)' }}>
-          {STATS.map((stat, i) => (
+          {stats.map((stat, i) => (
             <div
-              key={stat.label}
+              key={stat.id}
               className={`group relative text-center rounded-2xl border border-white/[0.06] bg-white/[0.02] card-playful wiggle-hover transition-all duration-700 ${
                 inView
                   ? 'opacity-100 translate-y-0'
@@ -131,7 +129,7 @@ export default function ImpactCounter() {
 
               {/* Icon */}
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent-yellow/10 text-accent-yellow" style={{ marginBottom: '1.5rem' }}>
-                {stat.icon}
+                {STAT_ICONS[stat.id] ?? DEFAULT_ICON}
               </div>
 
               {/* Number */}

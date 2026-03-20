@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import FloatingDoodles, { ABOUT_DOODLES, PARTNERS_DOODLES, ACK_DOODLES } from './FloatingDoodles';
 import WavyDivider from './WavyDivider';
-import PolaroidWall, { ABOUT_POLAROIDS, PARTNERS_POLAROIDS, ACK_POLAROIDS } from './PolaroidWall';
+import PolaroidWall from './PolaroidWall';
+import { usePolaroids, useSetting } from '../hooks/useSiteData';
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -37,6 +38,8 @@ const ACKNOWLEDGEMENTS = [
 /* ── Founder ── */
 export function Founder() {
   const { ref, inView } = useInView();
+  const { polaroids } = usePolaroids('about');
+  const { value: founderPhoto } = useSetting('founder_photo_url');
 
   return (
     <section
@@ -45,7 +48,7 @@ export function Founder() {
       className="relative bg-navy overflow-hidden snap-section flex items-center"
       style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <PolaroidWall polaroids={ABOUT_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={ABOUT_DOODLES} color="var(--color-accent-yellow)" />
       <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
 
@@ -56,16 +59,20 @@ export function Founder() {
           }`}
           style={{ gap: 'clamp(3rem, 6vw, 5rem)' }}
         >
-          {/* Photo placeholder */}
+          {/* Photo */}
           <div className="relative mx-auto lg:mx-0 w-full" style={{ maxWidth: '300px' }}>
             <div className="aspect-[3/4] rounded-2xl bg-navy-light border border-white/[0.06] overflow-hidden flex items-center justify-center">
-              <div className="text-center px-6">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/20 mx-auto mb-3">
-                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <p className="text-white/20 text-xs font-body">Your photo here</p>
-              </div>
+              {founderPhoto ? (
+                <img src={founderPhoto} alt="Alton Chung, Founder" className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-center px-6">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/20 mx-auto mb-3">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                  <p className="text-white/20 text-xs font-body">Your photo here</p>
+                </div>
+              )}
             </div>
             <div className="absolute -bottom-3 -right-3 w-20 h-20 border-r-2 border-b-2 border-accent-yellow/20 rounded-br-2xl" aria-hidden="true" />
           </div>
@@ -111,6 +118,7 @@ export function Founder() {
 /* ── Partners ── */
 export function Partners() {
   const { ref, inView } = useInView();
+  const { polaroids } = usePolaroids('partners');
 
   return (
     <section
@@ -119,7 +127,7 @@ export function Partners() {
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <PolaroidWall polaroids={PARTNERS_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={PARTNERS_DOODLES} color="var(--color-medical-blue)" />
 
       <div
@@ -181,6 +189,7 @@ const FOOTER_LINKS = [
 
 export function Acknowledgements() {
   const { ref, inView } = useInView();
+  const { polaroids } = usePolaroids('ack');
 
   return (
     <section
@@ -189,7 +198,7 @@ export function Acknowledgements() {
       className="relative bg-navy overflow-hidden snap-section flex flex-col justify-between"
       style={{ minHeight: '100vh' }}
     >
-      <PolaroidWall polaroids={ACK_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={ACK_DOODLES} color="var(--color-accent-orange)" />
 
       {/* Acknowledgements content */}

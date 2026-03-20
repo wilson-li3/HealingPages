@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import FloatingDoodles, { DONATE_DOODLES } from './FloatingDoodles';
-import PolaroidWall, { DONATE_POLAROIDS } from './PolaroidWall';
+import PolaroidWall from './PolaroidWall';
 import { supabase } from '../lib/supabase';
 import AddressAutocomplete from './AddressAutocomplete';
+import { usePolaroids } from '../hooks/useSiteData';
 
 function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -59,6 +60,7 @@ function validate(data: FormData): Record<string, string> {
 
 export default function DonateForm() {
   const { ref, inView } = useInView();
+  const { polaroids } = usePolaroids('donate');
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -159,7 +161,7 @@ export default function DonateForm() {
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
       style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
     >
-      <PolaroidWall polaroids={DONATE_POLAROIDS} />
+      <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={DONATE_DOODLES} color="var(--color-accent-yellow)" />
 
       <div

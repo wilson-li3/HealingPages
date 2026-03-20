@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
-interface Polaroid {
+export interface Polaroid {
   x: string;        // CSS left %
   y: string;        // CSS top %
   rotation: number;  // degrees
   caption: string;
   illustration: 'reading' | 'bookshelf' | 'storytime' | 'stacking' | 'sharing';
   width: number;     // px
+  image_url?: string; // Supabase Storage URL — if present, renders <img> instead of illustration
 }
 
 // Simple line-art illustrations for placeholders
@@ -170,7 +171,15 @@ export default function PolaroidWall({ polaroids, parallaxSpeed = 0.35 }: Props)
                   borderRadius: '1px',
                 }}
               >
-                <Illustration type={p.illustration} w={p.width * 0.8} />
+                {p.image_url ? (
+                  <img
+                    src={p.image_url}
+                    alt={p.caption}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Illustration type={p.illustration} w={p.width * 0.8} />
+                )}
               </div>
               {/* Caption */}
               <p
