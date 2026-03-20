@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import nodemailer from "npm:nodemailer@6";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -27,11 +28,12 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    const GMAIL_USER = Deno.env.get("GMAIL_USER");
+    const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD");
     const NOTIFICATION_EMAIL = Deno.env.get("NOTIFICATION_EMAIL");
 
-    if (!RESEND_API_KEY || !NOTIFICATION_EMAIL) {
-      return jsonResponse({ error: "Missing RESEND_API_KEY or NOTIFICATION_EMAIL" }, 500);
+    if (!GMAIL_USER || !GMAIL_APP_PASSWORD || !NOTIFICATION_EMAIL) {
+      return jsonResponse({ error: "Missing GMAIL_USER, GMAIL_APP_PASSWORD, or NOTIFICATION_EMAIL" }, 500);
     }
 
     const { name, email, phone, pickup_address, book_quantity, book_condition, message } = await req.json();
@@ -81,27 +83,22 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_APP_PASSWORD,
       },
-      body: JSON.stringify({
-        from: "HealingPages <onboarding@resend.dev>",
-        to: [NOTIFICATION_EMAIL],
-        subject: `New Donation: ${escapeHtml(name)} (${book_quantity} books)`,
-        html,
-      }),
     });
 
-    const data = await res.json();
+    const info = await transporter.sendMail({
+      from: `HealingPages <${GMAIL_USER}>`,
+      to: NOTIFICATION_EMAIL,
+      subject: `New Donation: ${escapeHtml(name)} (${book_quantity} books)`,
+      html,
+    });
 
-    if (!res.ok) {
-      return jsonResponse({ error: data }, res.status);
-    }
-
-    return jsonResponse({ success: true, id: data.id }, 200);
+    return jsonResponse({ success: true, id: info.messageId }, 200);
   } catch (err) {
     return jsonResponse({ error: (err as Error).message }, 500);
   }
