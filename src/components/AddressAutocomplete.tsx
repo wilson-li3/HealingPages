@@ -140,8 +140,8 @@ export default function AddressAutocomplete({ value, onChange, onBlur, error, pl
         <ul
           id={listboxId}
           role="listbox"
-          className="absolute z-50 left-0 right-0 border border-white/[0.08] bg-[#1a1f2e] rounded-xl overflow-hidden shadow-lg"
-          style={{ marginTop: '0.25rem' }}
+          className="absolute z-50 left-0 right-0 border border-white/[0.08] bg-[#1a1f2e] rounded-xl overflow-hidden overflow-y-auto shadow-lg"
+          style={{ marginTop: '0.25rem', maxHeight: 'min(240px, 50vh)' }}
         >
           {suggestions.map((suggestion, i) => (
             <li

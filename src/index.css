@@ -20,14 +20,27 @@
   --font-body: 'Open Sauce Sans', sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
 
 html {
   scroll-snap-type: y mandatory;
+}
+
+@media (max-width: 767px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+}
+
+/* Eliminate 300ms tap delay on interactive elements */
+a, button, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
 }
 
 body {
@@ -52,9 +65,11 @@ body {
 .card-playful {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.card-playful:hover {
-  transform: translateY(-4px) rotate(-1deg);
-  box-shadow: 0 8px 30px rgba(255, 179, 0, 0.08);
+@media (hover: hover) {
+  .card-playful:hover {
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow: 0 8px 30px rgba(255, 179, 0, 0.08);
+  }
 }
 
 /* Wiggle animation for icons */
@@ -63,8 +78,10 @@ body {
   25% { transform: rotate(-6deg); }
   75% { transform: rotate(6deg); }
 }
-.wiggle-hover:hover svg {
-  animation: wiggle 0.4s ease-in-out;
+@media (hover: hover) {
+  .wiggle-hover:hover svg {
+    animation: wiggle 0.4s ease-in-out;
+  }
 }
 
 /* Respect reduced motion */

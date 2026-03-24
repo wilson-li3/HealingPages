@@ -97,7 +97,7 @@ export default function Header() {
       {/* Warm gradient bottom border */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-yellow/30 to-transparent" />
 
-      <div style={{ paddingLeft: 'clamp(2rem, 5vw, 5rem)', paddingRight: 'clamp(2rem, 5vw, 5rem)' }}>
+      <div style={{ paddingLeft: 'clamp(1rem, 5vw, 5rem)', paddingRight: 'clamp(1rem, 5vw, 5rem)' }}>
         <div className="relative flex items-center justify-between h-16 md:h-[72px]">
           {/* Logo — left */}
           <a href="/" onClick={(e) => { e.preventDefault(); smoothScrollTo('/'); }} className="relative z-10 group font-display text-white text-3xl leading-none select-none transition-opacity duration-200 hover:opacity-80 cursor-pointer">
@@ -159,7 +159,7 @@ export default function Header() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden ml-auto relative w-10 h-10 flex items-center justify-center text-white"
+            className="md:hidden ml-auto relative w-11 h-11 flex items-center justify-center text-white"
             aria-label="Toggle menu"
           >
             <div className="flex flex-col gap-[5px]">
@@ -186,10 +186,10 @@ export default function Header() {
       {/* Mobile menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-400 ease-out ${
-          mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          mobileOpen ? 'max-h-[calc(100dvh-4rem)] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <nav className="px-6 pb-6 pt-2 bg-navy/95 backdrop-blur-xl border-t border-white/[0.06] flex flex-col gap-1">
+        <nav className="px-6 pb-6 pt-2 bg-navy/95 backdrop-blur-xl border-t border-white/[0.06] flex flex-col gap-1 overflow-y-auto">
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}

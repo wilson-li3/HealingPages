@@ -135,7 +135,7 @@ export default function PolaroidWall({ polaroids, parallaxSpeed = 0.35 }: Props)
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
+      className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block"
       aria-hidden="true"
     >
       <div

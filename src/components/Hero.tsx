@@ -95,11 +95,11 @@ export default function Hero() {
     <section
       ref={sectionRef}
       className="relative w-full snap-section"
-      style={{ height: '400vh' }}
+      style={{ height: 'clamp(250vh, 400vh, 400vh)' }}
       aria-label="Healing Pages hero"
     >
       {/* Sticky viewport container */}
-      <div className="sticky top-0 w-full h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
+      <div className="sticky top-0 w-full h-screen min-h-[100dvh] sm:min-h-[600px] overflow-hidden flex items-center justify-center">
         {/* Fallback background while video loads */}
         <div
           className="absolute inset-0 z-0 bg-navy"
@@ -150,7 +150,7 @@ export default function Hero() {
         >
           {/* Impact stat badge */}
           <div
-            className={`inline-flex items-center gap-2.5 mb-10 px-5 py-2.5 rounded-full border border-accent-yellow/25 bg-accent-yellow/10 backdrop-blur-sm transition-all duration-700 ${
+            className={`inline-flex items-center gap-2.5 mb-5 sm:mb-10 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full border border-accent-yellow/25 bg-accent-yellow/10 backdrop-blur-sm transition-all duration-700 ${
               isLoaded
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-4'
@@ -160,7 +160,7 @@ export default function Hero() {
               <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
             </svg>
-            <span className="text-accent-yellow text-sm font-medium tracking-wide font-body">
+            <span className="text-accent-yellow text-xs sm:text-sm font-medium tracking-wide font-body">
               500+ books prescribed to Pittsburgh & Philadelphia kids
             </span>
           </div>
@@ -172,14 +172,14 @@ export default function Hero() {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-6'
             }`}
-            style={{ fontSize: 'clamp(4.5rem, 12vw, 10rem)' }}
+            style={{ fontSize: 'clamp(3.25rem, 12vw, 10rem)' }}
           >
             Healing Pages
           </h1>
 
           {/* Hand-drawn underline */}
           <svg
-            className={`mx-auto mb-8 transition-all duration-700 delay-300 ${
+            className={`mx-auto mb-4 sm:mb-8 transition-all duration-700 delay-300 ${
               isLoaded ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
             }`}
             width="160"
@@ -210,7 +210,7 @@ export default function Hero() {
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-6'
             }`}
-            style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', marginBottom: '3rem' }}
+            style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.5rem)', marginBottom: 'clamp(1.5rem, 4vw, 3rem)' }}
           >
             Prescribing literacy to children in Pittsburgh & Philadelphia hospitals and schools —{' '}
             <span className="text-white font-normal">because every child deserves a story.</span>
@@ -218,7 +218,7 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div
-            className={`flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 transition-all duration-700 delay-500 ${
+            className={`flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 transition-all duration-700 delay-500 ${
               isLoaded
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-6'
@@ -228,7 +228,7 @@ export default function Hero() {
             <a
               href="#donate"
               className="group inline-flex items-center justify-center gap-2.5 w-full sm:w-auto bg-accent-yellow text-navy font-semibold text-base cursor-pointer transition-all duration-200 hover:bg-white hover:shadow-[0_0_30px_rgba(255,179,0,0.3)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-yellow/50"
-              style={{ padding: '1.125rem 2.75rem' }}
+              style={{ padding: 'clamp(0.875rem, 2vw, 1.125rem) clamp(1.5rem, 4vw, 2.75rem)' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 group-hover:scale-110">
                 <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
@@ -240,7 +240,7 @@ export default function Hero() {
             <a
               href="#schedule"
               className="inline-flex items-center justify-center gap-2.5 w-full sm:w-auto border border-white/30 text-base text-white/90 cursor-pointer transition-all duration-200 hover:bg-white/10 hover:border-white/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-              style={{ padding: '1.125rem 2.75rem' }}
+              style={{ padding: 'clamp(0.875rem, 2vw, 1.125rem) clamp(1.5rem, 4vw, 2.75rem)' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

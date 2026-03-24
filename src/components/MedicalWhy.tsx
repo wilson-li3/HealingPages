@@ -46,7 +46,7 @@ export default function MedicalWhy() {
 
       {/* Decorative blob */}
       <div
-        className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full opacity-[0.03]"
+        className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full opacity-[0.03] hidden sm:block"
         style={{ background: 'radial-gradient(circle, var(--color-medical-blue) 0%, transparent 70%)' }}
         aria-hidden="true"
       />

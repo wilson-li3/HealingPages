@@ -60,7 +60,7 @@ export function Founder() {
           style={{ gap: 'clamp(3rem, 6vw, 5rem)' }}
         >
           {/* Photo */}
-          <div className="relative mx-auto lg:mx-0 w-full" style={{ maxWidth: '300px' }}>
+          <div className="relative mx-auto lg:mx-0 w-full" style={{ maxWidth: 'min(300px, 100%)' }}>
             <div className="aspect-[3/4] rounded-2xl bg-navy-light border border-white/[0.06] overflow-hidden flex items-center justify-center">
               {founderPhoto ? (
                 <img src={founderPhoto} alt="Alton Chung, Founder" className="w-full h-full object-cover" />
@@ -74,7 +74,7 @@ export function Founder() {
                 </div>
               )}
             </div>
-            <div className="absolute -bottom-3 -right-3 w-20 h-20 border-r-2 border-b-2 border-accent-yellow/20 rounded-br-2xl" aria-hidden="true" />
+            <div className="absolute -bottom-3 -right-3 w-20 h-20 border-r-2 border-b-2 border-accent-yellow/20 rounded-br-2xl hidden sm:block" aria-hidden="true" />
           </div>
 
           {/* Bio */}
@@ -246,7 +246,7 @@ export function Acknowledgements() {
       <footer className="border-t border-white/[0.06]">
         <div className="w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
           <div
-            className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr]"
+            className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr]"
             style={{ gap: 'clamp(2rem, 4vw, 3rem)', padding: 'clamp(2.5rem, 5vw, 3.5rem) 0' }}
           >
             <div>

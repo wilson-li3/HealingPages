@@ -83,7 +83,7 @@ export default function ImpactCounter() {
       id="impact"
       ref={ref}
       className="relative bg-navy overflow-hidden snap-section flex items-center"
-      style={{ padding: 'clamp(6rem, 12vw, 11rem) 0' }}
+      style={{ padding: 'clamp(3rem, 12vw, 11rem) 0' }}
     >
       <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={IMPACT_DOODLES} color="var(--color-accent-yellow)" />
@@ -128,7 +128,7 @@ export default function ImpactCounter() {
               <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-b from-accent-yellow/[0.04] to-transparent" />
 
               {/* Icon */}
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-accent-yellow/10 text-accent-yellow" style={{ marginBottom: '1.5rem' }}>
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-accent-yellow/10 text-accent-yellow" style={{ marginBottom: '1.5rem' }}>
                 {STAT_ICONS[stat.id] ?? DEFAULT_ICON}
               </div>
 

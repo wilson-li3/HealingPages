@@ -320,7 +320,7 @@ export default function SchedulePickup() {
                 <button
                   type="submit"
                   disabled={status === 'submitting' || status === 'throttled'}
-                  className="w-full sm:w-auto bg-accent-orange text-navy font-semibold text-sm font-body rounded-xl transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer"
+                  className="w-full sm:w-auto bg-accent-orange text-navy font-semibold text-sm font-body rounded-xl transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer min-h-[44px]"
                   style={{ padding: '0.875rem 2.5rem' }}
                 >
                   {status === 'submitting' ? (

@@ -330,7 +330,7 @@ export default function DonateForm() {
                               ? 'border-accent-yellow bg-accent-yellow/15 text-accent-yellow'
                               : 'border-white/[0.08] bg-white/[0.02] text-white/35 hover:border-white/[0.15] hover:text-white/50'
                           }`}
-                          style={{ padding: '0.5rem 0.25rem' }}
+                          style={{ padding: '0.625rem 0.375rem' }}
                         >
                           <span className="font-semibold" style={{ fontSize: '0.8125rem' }}>{value}</span>
                           <span className="hidden sm:block" style={{ fontSize: '0.5625rem', marginTop: '0.125rem' }}>{label}</span>
@@ -361,7 +361,7 @@ export default function DonateForm() {
                 <button
                   type="submit"
                   disabled={status === 'submitting' || status === 'throttled'}
-                  className="w-full sm:w-auto bg-accent-yellow text-navy font-semibold text-sm font-body rounded-xl transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer"
+                  className="w-full sm:w-auto bg-accent-yellow text-navy font-semibold text-sm font-body rounded-xl transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer min-h-[44px]"
                   style={{ padding: '0.875rem 2.5rem' }}
                 >
                   {status === 'submitting' ? (

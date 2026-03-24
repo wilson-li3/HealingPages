@@ -47,7 +47,7 @@ interface Props {
 
 export default function FloatingDoodles({ doodles, color = 'currentColor' }: Props) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block" aria-hidden="true">
       {doodles.map((d, i) => (
         <svg
           key={i}
