@@ -6,6 +6,7 @@ import ImpactCounter from './components/ImpactCounter';
 import MedicalWhy from './components/MedicalWhy';
 import { Founder, Partners, Acknowledgements } from './components/About';
 import DonateForm from './components/DonateForm';
+import SchedulePickup from './components/SchedulePickup';
 
 const Admin = lazy(() => import('./pages/Admin'));
 
@@ -19,6 +20,7 @@ function MainSite() {
       <Founder />
       <Partners />
       <DonateForm />
+      <SchedulePickup />
       <Acknowledgements />
     </main>
   );
