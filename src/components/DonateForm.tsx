@@ -159,7 +159,7 @@ export default function DonateForm() {
       id="donate"
       ref={ref}
       className="relative bg-navy-light overflow-hidden snap-section flex items-center"
-      style={{ minHeight: '100vh', padding: 'clamp(6rem, 12vw, 11rem) 0' }}
+      style={{ minHeight: '100vh', padding: 'clamp(4rem, 6vw, 6rem) 0' }}
     >
       <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={DONATE_DOODLES} color="var(--color-accent-yellow)" />
