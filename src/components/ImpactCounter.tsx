@@ -87,7 +87,7 @@ export default function ImpactCounter() {
     >
       <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={IMPACT_DOODLES} color="var(--color-accent-yellow)" />
-      <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
+      <WavyDivider fillBottom="#132238" />
 
       {/* Background texture */}
       <div

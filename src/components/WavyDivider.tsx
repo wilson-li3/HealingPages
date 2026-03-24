@@ -1,10 +1,9 @@
 interface Props {
-  fillTop?: string;
   fillBottom?: string;
   flip?: boolean;
 }
 
-export default function WavyDivider({ fillTop = '#0A1628', fillBottom = '#132238', flip = false }: Props) {
+export default function WavyDivider({ fillBottom = '#132238', flip = false }: Props) {
   return (
     <div
       className="absolute left-0 right-0 w-full overflow-hidden pointer-events-none z-[3]"

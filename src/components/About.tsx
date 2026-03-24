@@ -50,7 +50,7 @@ export function Founder() {
     >
       <PolaroidWall polaroids={polaroids} />
       <FloatingDoodles doodles={ABOUT_DOODLES} color="var(--color-accent-yellow)" />
-      <WavyDivider fillTop="#0A1628" fillBottom="#132238" />
+      <WavyDivider fillBottom="#132238" />
 
       <div className="relative w-full" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 clamp(2rem, 6vw, 6rem)' }}>
         <div
